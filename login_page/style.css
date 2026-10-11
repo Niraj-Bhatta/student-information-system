@@ -1,137 +1,211 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:"poppins",sans-serif;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", "Poppins", sans-serif;
 }
-body{
-    background-color: #c9d6ff;
-    background:linear-gradient(to right,#e2e2e2,#c9d6ff);
-}
-.container{
-    background:#fff;
-    width:450px;
-    padding:1.5rem;
-    margin:50px auto;
-    border-radius:10px;
-    box-shadow:0 20px 35px rgba(0,0,1,0.9);
-}
-form{
-    margin:0 2rem;
-}
-.form-title{
-    font-size:1.5rem;
-    font-weight:bold;
-    text-align:center;
-    padding:1.3rem;
-    margin-bottom:0.4rem;
-}
-input{
-    color:inherit;
-    width:100%;
-    background-color:transparent;
-    border:none;
-    border-bottom:1px solid #757575;
-    padding-left:1.5rem;
-    font-size:15px;
-}
-.input-group{
-    padding:1% 0;
-    position:relative;
 
+body {
+    background: linear-gradient(135deg, #e2e2e2, #c9d6ff);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px 16px;
 }
-.input-group i{
-    position:absolute;
-    color:black;
+
+.container {
+    background: #fff;
+    width: 100%;
+    max-width: 450px;
+    padding: 2rem 1.8rem;
+    margin: 0 auto;
+    border-radius: 16px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
 }
-input:focus{
+
+form {
+    margin: 0 0.5rem;
+}
+
+.form-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    text-align: center;
+    padding: 0.8rem 0 1.2rem;
+    color: #1a1a2e;
+}
+
+/* ── Input Group ── */
+.input-group {
+    padding: 14px 0 6px;
+    position: relative;
+    margin-bottom: 4px;
+}
+
+.input-group i {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-30%);
+    color: #888;
+    font-size: 0.95rem;
+}
+
+input {
+    color: inherit;
+    width: 100%;
     background-color: transparent;
-    outline:transparent;
-    border-bottom:2px solid hsl(327,90%,28%);
+    border: none;
+    border-bottom: 1.5px solid #ccc;
+    padding-left: 1.6rem;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.3s;
+    font-family: inherit;
 }
-input::placeholder{
-    color:transparent;
-}
-label{
-    color:#757575;
-    position:relative;
-    left:1.2em;
-    top:-1.3em;
-    cursor:auto;
-    transition:0.3s ease all;
-}
-input:focus~label,input:not(:placeholder-shown)~label{
-    top:-3em;
-    color:hsl(327,90%,28%);
-    font-size:15px;
-}
-.recover{
-    text-align:right;
-    font-size:1rem;
-    margin-bottom:1rem;
 
+input:focus {
+    border-bottom: 2px solid hsl(327, 90%, 28%);
 }
-.recover a{
-    text-decoration:none;
-    color:rgb(125,125,235);
+
+input::placeholder {
+    color: transparent;
 }
-.recover a:hover{
-    color:blue;
-    text-decoration:underline;
+
+label {
+    color: #888;
+    position: absolute;
+    left: 1.5em;
+    top: 50%;
+    transform: translateY(-10%);
+    cursor: text;
+    transition: all 0.25s ease;
+    font-size: 0.92rem;
+    pointer-events: none;
 }
-.btn{
-    font-size:1.1rem;
-    padding:8px 0;
-    border-radius:5px;
-    outline:none;
-    border:none;
-    width:100%;
-    background:rgb(125,125,235);
-    color:white;
-    cursor:pointer;
-    transition:0.9s;
+
+input:focus ~ label,
+input:not(:placeholder-shown) ~ label {
+    top: 4px;
+    transform: translateY(0);
+    color: hsl(327, 90%, 28%);
+    font-size: 0.75rem;
+    font-weight: 600;
 }
-.btn:hover{
-    background:#07001f;
+
+/* ── Recover ── */
+.recover {
+    text-align: right;
+    font-size: 0.88rem;
+    margin: 12px 0 16px;
 }
-.or{
-    font-size:1.1rem;
-    margin-top:0.5rem;
-    text-align:center;
+
+.recover a {
+    text-decoration: none;
+    color: rgb(100, 100, 220);
 }
-.icons{
-    text-align:center;
+
+.recover a:hover {
+    color: blue;
+    text-decoration: underline;
 }
-.icons i{
-    color:rgb(125,125,235);
-    padding:0.8rem 1.5rem;
-    border-radius:10px;
-    font-size:1.5rem;
-    cursor:pointer;
-    border:2px solid #dfe9f5;
-    margin:0 15px;
-    transition:1s;
+
+/* ── Button ── */
+.btn {
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 10px 0;
+    border-radius: 8px;
+    outline: none;
+    border: none;
+    width: 100%;
+    background: linear-gradient(135deg, #7d7deb, #5b5bd6);
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    margin-top: 8px;
 }
-.icons i:hover{
-    background:#07001f;
-    font-size:1.6rem;
-    border:2px solid rgb(125,125,235);
+
+.btn:hover {
+    background: #07001f;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(91, 91, 214, 0.35);
 }
-.links{
-    display:flex;
-    justify-content:space-around;
-    padding:0 4rem;
-    margin-top:0.9rem;
-    font-weight:bold;
+
+/* ── Or Separator ── */
+.or {
+    font-size: 0.88rem;
+    margin-top: 1rem;
+    text-align: center;
+    color: #aaa;
+    letter-spacing: 0.06em;
 }
-button{
-    color:rgb(125,125,235);
-    border:none;
-    background-color:transparent;
-    font-size:1rem;
-    font-weight:bold;
+
+/* ── Social Icons ── */
+.icons {
+    text-align: center;
+    margin-top: 0.6rem;
 }
-button:hover{
-    text-decoration:underline;
-    color:blue;
+
+.icons i {
+    color: rgb(125, 125, 235);
+    padding: 0.7rem 1.2rem;
+    border-radius: 10px;
+    font-size: 1.4rem;
+    cursor: pointer;
+    border: 2px solid #dfe9f5;
+    margin: 0 10px;
+    transition: all 0.3s ease;
+}
+
+.icons i:hover {
+    background: #07001f;
+    color: #fff;
+    border-color: rgb(125, 125, 235);
+}
+
+/* ── Toggle Links ── */
+.links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 0.8rem 0 0.4rem;
+    font-size: 0.88rem;
+    flex-wrap: wrap;
+}
+
+.links p { color: #666; }
+
+button {
+    color: rgb(100, 100, 220);
+    border: none;
+    background-color: transparent;
+    font-size: 0.92rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+button:hover {
+    text-decoration: underline;
+    color: blue;
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+    body { padding: 20px 12px; }
+
+    .container {
+        padding: 1.5rem 1.2rem;
+        border-radius: 12px;
+    }
+
+    .form-title { font-size: 1.3rem; }
+
+    .icons i { padding: 0.6rem 0.9rem; margin: 0 6px; }
+
+    .links { flex-direction: column; text-align: center; }
 }

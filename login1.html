@@ -3,191 +3,309 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
-    <link rel="stylesheet" href="styles.css">
+    <meta name="description" content="Student Information System – Login to access your portal.">
+    <title>Login – Student Information System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #00b09b, #96c93d);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* ── Role Selection Modal ── */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            padding: 20px;
+        }
+
+        .overlay.hidden { display: none; }
+
+        .login-modal {
+            background: #fff;
+            padding: 2.5rem 2rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: fadeIn 0.4s ease;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-modal h2 {
+            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+            color: #1a1a2e;
+        }
+
+        .login-modal p {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .role-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 0.85rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(135deg, #007bff, #00aaff);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            width: 100%;
+            font-family: inherit;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,122,255,0.35);
+        }
+
+        /* ── Login Form Modal ── */
+        .form-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .form-overlay.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .form-modal {
+            background: #fff;
+            padding: 2.5rem 2rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 400px;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .form-overlay.visible .form-modal {
+            transform: translateY(0);
+        }
+
+        .form-modal h2 {
+            font-size: 1.5rem;
+            color: #1a1a2e;
+            margin-bottom: 0.3rem;
+        }
+
+        .form-modal .subtitle {
+            color: #888;
+            font-size: 0.85rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 1.2rem;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.9rem 1rem 0.9rem 2.8rem;
+            font-size: 0.95rem;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 10px;
+            outline: none;
+            transition: border-color 0.25s;
+            font-family: inherit;
+            background: #f9f9f9;
+        }
+
+        .input-group input:focus {
+            border-color: #007bff;
+            background: #fff;
+        }
+
+        .input-group .icon {
+            position: absolute;
+            left: 0.9rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #aaa;
+            font-size: 1rem;
+            pointer-events: none;
+        }
+
+        .form-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 1.5rem;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+
+        .btn-submit:hover {
+            box-shadow: 0 8px 25px rgba(40,167,69,0.35);
+        }
+
+        .btn-cancel {
+            background: linear-gradient(135deg, #dc3545, #e84d60);
+        }
+
+        .btn-cancel:hover {
+            box-shadow: 0 8px 25px rgba(220,53,69,0.35);
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .back-link a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link a:hover { text-decoration: underline; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @media (max-width: 380px) {
+            .login-modal, .form-modal {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
+
+    <!-- Role Selection -->
     <div class="overlay" id="overlay">
         <div class="login-modal">
-            <h2>Welcome to NCIT Info Sys</h2>
-            <button class="btn" id="student-login">Login as Student</button>
-            <button class="btn" id="teacher-login">Login as Teacher</button>
+            <h2>Welcome Back</h2>
+            <p>Choose your role to continue</p>
+            <div class="role-buttons">
+                <button class="btn" id="student-login">🎓 Login as Student</button>
+                <button class="btn" id="teacher-login">👨‍🏫 Login as Teacher</button>
+            </div>
         </div>
     </div>
 
     <!-- Student Login Form -->
-    <div class="form-modal" id="student-form">
-        <form>
+    <div class="form-overlay" id="student-overlay">
+        <div class="form-modal" id="student-form">
             <h2>Student Login</h2>
-            <input type="text" placeholder="Username" required>
-            <input type="password" placeholder="Password" required>
-           <a href="main.html">Login
-           </a> 
-          <a href="#overlay"> <button type="button" class="btn cancel-btn">Cancel</button></a> 
-        </form>
+            <p class="subtitle">Enter your credentials to access your portal</p>
+            <form action="main.html">
+                <div class="input-group">
+                    <span class="icon">👤</span>
+                    <input type="text" placeholder="Username" required autocomplete="username">
+                </div>
+                <div class="input-group">
+                    <span class="icon">🔒</span>
+                    <input type="password" placeholder="Password" required autocomplete="current-password">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-submit">Login</button>
+                    <button type="button" class="btn btn-cancel" id="cancel-student">Cancel</button>
+                </div>
+            </form>
+            <div class="back-link">
+                <a href="#" id="back-to-roles-student">← Back to role selection</a>
+            </div>
+        </div>
     </div>
 
     <!-- Teacher Login Form -->
-    <div class="form-modal" id="teacher-form">
-        <form>
+    <div class="form-overlay" id="teacher-overlay">
+        <div class="form-modal" id="teacher-form">
             <h2>Teacher Login</h2>
-            <input type="text" placeholder="Username" required>
-            <input type="password" placeholder="Password" required>
-           <a href="main.html">Login</button></a>
-            <button type="button" class="btn cancel-btn">Cancel</button>
-        </form>
+            <p class="subtitle">Enter your credentials to access your portal</p>
+            <form action="main.html">
+                <div class="input-group">
+                    <span class="icon">👤</span>
+                    <input type="text" placeholder="Username" required autocomplete="username">
+                </div>
+                <div class="input-group">
+                    <span class="icon">🔒</span>
+                    <input type="password" placeholder="Password" required autocomplete="current-password">
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-submit">Login</button>
+                    <button type="button" class="btn btn-cancel" id="cancel-teacher">Cancel</button>
+                </div>
+            </form>
+            <div class="back-link">
+                <a href="#" id="back-to-roles-teacher">← Back to role selection</a>
+            </div>
+        </div>
     </div>
 
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #00b09b, #96c93d);
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1;
-            transition: opacity 0.3s ease;
-        }
-
-        .login-modal {
-            background: #ffffff;
-            padding: 2.5rem;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-            animation: fadeIn 0.5s ease;
-            transition: transform 0.3s ease;
-        }
-
-        h2 {
-            margin: 0 0 1.5rem 0;
-            font-size: 26px;
-            color: #333;
-        }
-
-        .btn {
-            padding: 0.8rem 1.5rem;
-            margin: 0.8rem;
-            font-size: 16px;
-            color: white;
-            background: linear-gradient(to right, #007bff, #00aaff);
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s, transform 0.3s;
-        }
-
-        .btn:hover {
-            background: linear-gradient(to right, #0056b3, #0066cc);
-            transform: scale(1.05);
-        }
-
-        .form-modal {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 2.5rem;
-            border-radius: 15px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-            z-index: 2;
-            animation: slideIn 0.5s ease;
-        }
-
-        input {
-            width: 100%;
-            padding: 1rem;
-            margin: 0.8rem 0;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-
-        input:focus {
-            border-color: #007bff;
-        }
-
-        .submit-btn {
-            background-color: #28a745;
-        }
-
-        .submit-btn:hover {
-            background-color: #218838;
-        }
-
-        .cancel-btn {
-            background-color: #dc3545;
-        }
-
-        .cancel-btn:hover {
-            background-color: #c82333;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translate(-50%, -60%);
-            }
-            to {
-                transform: translate(-50%, -50%);
-            }
-        }
-
-    </style>
-
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const studentLoginButton = document.getElementById('student-login');
-            const teacherLoginButton = document.getElementById('teacher-login');
-            const studentForm = document.getElementById('student-form');
-            const teacherForm = document.getElementById('teacher-form');
-            const cancelButtons = document.querySelectorAll('.cancel-btn');
+        const overlay          = document.getElementById('overlay');
+        const studentOverlay   = document.getElementById('student-overlay');
+        const teacherOverlay   = document.getElementById('teacher-overlay');
 
-            studentLoginButton.addEventListener('click', () => {
-                studentForm.style.display = 'block';
-                document.querySelector('.overlay').style.display = 'flex';
-            });
+        function showStudentForm() {
+            overlay.classList.add('hidden');
+            studentOverlay.classList.add('visible');
+        }
 
-            teacherLoginButton.addEventListener('click', () => {
-                teacherForm.style.display = 'block';
-                document.querySelector('.overlay').style.display = 'flex';
-            });
+        function showTeacherForm() {
+            overlay.classList.add('hidden');
+            teacherOverlay.classList.add('visible');
+        }
 
-            cancelButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    studentForm.style.display = 'none';
-                    teacherForm.style.display = 'none';
-                    document.querySelector('.overlay').style.display = 'none';
-                });
-            });
-        });
-    </script> 
+        function backToRoles() {
+            studentOverlay.classList.remove('visible');
+            teacherOverlay.classList.remove('visible');
+            overlay.classList.remove('hidden');
+        }
 
+        document.getElementById('student-login').addEventListener('click', showStudentForm);
+        document.getElementById('teacher-login').addEventListener('click', showTeacherForm);
+        document.getElementById('cancel-student').addEventListener('click', backToRoles);
+        document.getElementById('cancel-teacher').addEventListener('click', backToRoles);
+        document.getElementById('back-to-roles-student').addEventListener('click', (e) => { e.preventDefault(); backToRoles(); });
+        document.getElementById('back-to-roles-teacher').addEventListener('click', (e) => { e.preventDefault(); backToRoles(); });
+    </script>
 </body>
 </html>

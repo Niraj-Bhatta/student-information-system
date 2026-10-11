@@ -1,525 +1,1938 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student Information System</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-</head>
-<body>
-  <!-- Navbar -->
-  <header id="back_from_dashboard">
-    <nav>
-      <div class="logo">LOGO</div>
-      <ul class="nav-links">
-        <li><a href="#curriculum">Curriculum</a></li>
-        <li><a href="#programs">Programs</a></li>
-        <li><a href="#students">Students</a></li>
-        <li><a href="#schedule">Schedule</a></li>
-        <li><a href="#attendance">Attendance</a></li>
-        <li><a href="#grades">Grades</a></li>
-        <li><button class="login-btn" onclick="toggleLogin()">Login</button></li>
-      </ul>
-      <div class="profile-icon">
-        <i id="user-icon" class="fa-solid fa-user" onclick="toggleProfile()"></i>
-      </div>
-    </nav>
-  </header>
-
-  <!-- Main Section -->
-  <main>
-    <section class="hero-section">
-      <style>  
-      
-      .hero-section {
-        width: 100%;
-height: 100vh; /* Makes the section take the full height of the screen */
-background-image: url('Pokhara-university.jpg');
-background-size: cover; /* Ensures the image covers the entire section */
-background-position: center; /* Centers the image */
-background-repeat: no-repeat; /* Prevents the image from repeating */
-display: flex;
-justify-content: center;
-align-items: center;
-color: white;
-}
-
-</style>
-
-      <h1 id="first-text">Welcome to Student Information System</h1>
-    </section>
-    <section id="curriculum" class="feature">
-      <h2>Curriculum Management</h2>
-      <p>Manage your course curriculum and track progress.</p>
-    </section>
-    <section id="programs" class="feature">
-      <h2>Program Management</h2>
-      <p>Organize academic programs and monitor their status.</p>
-    </section>
-    <section id="students" class="feature">
-      <h2>Student Management</h2>
-      <p>Access and manage student records seamlessly.</p>
-    </section>
-    <section id="schedule" class="feature">
-      <h2>Schedule Management</h2>
-      <p>Plan and maintain schedules effectively.</p>
-    </section>
-    <section id="attendance" class="feature">
-      <h2>Attendance Management</h2>
-      <p>Track and manage attendance effortlessly.</p>
-    </section>
-    <section id="grades" class="feature">
-      <h2>Grades Management</h2>
-      <p>Monitor and record student grades accurately.</p>
-    </section>
-  </main>
-
-  <!-- Profile Dashboard (Right Side) -->
-  <div class="profile-dashboard hidden" id="profile-dashboard">
-    <h2 id="myprofile">My Profile</h2>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Student Information System – Full Dashboard">
+    <title>SIS Dashboard – NCIT</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
+        :root {
+            --bg: #f0f4f8;
+            --sidebar-w: 240px;
+            --sidebar-bg: #1a2744;
+            --sidebar-hover: rgba(255,255,255,0.08);
+            --sidebar-active: rgba(0,201,167,0.18);
+            --accent: #00C9A7;
+            --accent2: #3b82f6;
+            --danger: #ef4444;
+            --warn: #f59e0b;
+            --card: #fff;
+            --border: #e5e7eb;
+            --text: #1e293b;
+            --muted: #64748b;
+            --header-h: 60px;
+            --radius: 12px;
+            --shadow: 0 4px 20px rgba(0,0,0,0.07);
+            --shadow-lg: 0 10px 40px rgba(0,0,0,0.14);
+        }
+
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
         body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-        }
-        h1#first-text{
-            margin-top: -500px;
-        }
-        .dashboard {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
             display: flex;
-            height: 100vh;
+            overflow-x: hidden;
         }
 
-        .main-content {
-            flex: 1;
-            padding: 20px;
-        }
-
-        .profile-section {
-            width: 30%;
+        /* ══════════════════════════════
+           SIDEBAR
+        ══════════════════════════════ */
+        #sidebar {
+            width: var(--sidebar-w);
+            min-height: 100vh;
+            background: var(--sidebar-bg);
+            display: flex;
+            flex-direction: column;
             position: fixed;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            background: white;
-            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
-            overflow-y: auto;
-            padding: 20px;
+            top: 0; left: 0;
+            z-index: 200;
+            transition: transform 0.3s ease;
         }
 
-        .profile-header {
+        .sidebar-logo {
+            padding: 22px 20px 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .sidebar-logo h1 {
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+
+        .sidebar-logo span { color: var(--accent); }
+
+        .sidebar-logo p {
+            color: rgba(255,255,255,0.4);
+            font-size: 0.72rem;
+            margin-top: 2px;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 12px 10px;
+            overflow-y: auto;
+        }
+
+        .nav-section-label {
+            color: rgba(255,255,255,0.3);
+            font-size: 0.68rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 14px 10px 6px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 9px;
+            color: rgba(255,255,255,0.65);
+            font-size: 0.88rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 2px;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-family: inherit;
+        }
+
+        .nav-item i { width: 18px; text-align: center; font-size: 0.92rem; }
+
+        .nav-item:hover { background: var(--sidebar-hover); color: #fff; }
+
+        .nav-item.active {
+            background: var(--sidebar-active);
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .sidebar-footer {
+            padding: 14px 10px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .logout-nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 9px;
+            color: #ef4444;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-family: inherit;
+            transition: background 0.2s;
+        }
+
+        .logout-nav-btn:hover { background: rgba(239,68,68,0.12); }
+
+        /* ══════════════════════════════
+           MAIN AREA
+        ══════════════════════════════ */
+        #main-area {
+            margin-left: var(--sidebar-w);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Top bar */
+        .topbar {
+            height: var(--header-h);
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: space-between;
+            padding: 0 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        .profile-header h2 {
-            margin: 0;
-        }
+        .topbar-left { display: flex; align-items: center; gap: 14px; }
 
-        h2#myprofile {
-            margin-left: 120px;
-        }
-
-        .profile-header button {
-            background-color: #f44336;
-            color: white;
+        #hamburger-btn {
+            display: none;
+            background: none;
             border: none;
-            padding: 8px 16px;
             cursor: pointer;
-            border-radius: 4px;
-        }
-      
-        .profile-header button:hover {
-            background-color: #d32f2f;
+            font-size: 1.2rem;
+            color: var(--text);
         }
 
-        .profile-photo {
-            margin: 20px 0;
-            text-align: center;
+        .page-title { font-size: 1.05rem; font-weight: 700; color: var(--text); }
+
+        .topbar-right { display: flex; align-items: center; gap: 14px; }
+
+        .topbar-user {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text);
         }
 
-        .profile-photo-container {
+        .avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #00aaff);
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-direction: column;
-            gap: 10px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.85rem;
         }
 
-        .profile-photo img {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            object-fit: cover;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        /* Page Content */
+        .page-content {
+            padding: 28px 24px;
+            flex: 1;
         }
 
-        .profile-photo input {
-            display: none;
+        /* ══════════════════════════════
+           PAGE SECTIONS (hidden/visible)
+        ══════════════════════════════ */
+        .page-section { display: none; }
+        .page-section.active { display: block; }
+
+        /* ══════════════════════════════
+           DASHBOARD OVERVIEW
+        ══════════════════════════════ */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 18px;
+            margin-bottom: 28px;
         }
 
-        .upload-btn {
-            padding: 10px 16px;
-            background-color: #4caf50;
-            color: white;
+        .stat-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover { transform: translateY(-3px); }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .stat-icon.green  { background: rgba(0,201,167,0.12); color: var(--accent); }
+        .stat-icon.blue   { background: rgba(59,130,246,0.12); color: var(--accent2); }
+        .stat-icon.amber  { background: rgba(245,158,11,0.12); color: var(--warn); }
+        .stat-icon.red    { background: rgba(239,68,68,0.12); color: var(--danger); }
+
+        .stat-info .val { font-size: 1.7rem; font-weight: 700; line-height: 1; }
+        .stat-info .lbl { font-size: 0.8rem; color: var(--muted); margin-top: 3px; }
+
+        .recent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 18px;
+        }
+
+        /* ══════════════════════════════
+           MODULE CARDS / TABLES
+        ══════════════════════════════ */
+        .module-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .module-header h2 { font-size: 1.2rem; font-weight: 700; }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 9px 18px;
+            background: var(--accent);
+            color: #1a2744;
             border: none;
-            border-radius: 4px;
+            border-radius: 9px;
+            font-size: 0.88rem;
+            font-weight: 700;
             cursor: pointer;
-        }
-
-        .upload-btn:hover {
-            background-color: #45a049;
-        }
-
-        .save-btn {
-            padding: 10px 16px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .save-btn:hover {
-            background-color: #0056b3;
-        }
-
-        .success-message {
-            margin-top: 10px;
-            color: green;
-            font-size: 14px;
-            display: none;
-            text-align: center;
-        }
-
-        .profile-info {
-            margin-top: 20px;
-        }
-
-        .profile-info h3 {
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 8px;
-            margin-bottom: 16px;
-            color: #555;
-        }
-
-        .profile-info button {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            background-color: #2196f3;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            text-align: left;
-        }
-
-        .profile-info button:hover {
-            background-color: #1976d2;
-        }
-
-        .back-btn {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background-color: #2196f3;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
             text-decoration: none;
         }
 
-        .back-btn:hover {
-            background-color: #1976d2;
+        .btn-primary:hover {
+            background: #00b394;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(0,201,167,0.3);
         }
 
-        .personal-info {
-            padding: 10px;
-            border: 1px solid #ddd;
+        .btn-secondary {
+            padding: 8px 16px;
+            background: #f1f5f9;
+            color: var(--text);
+            border: none;
+            border-radius: 9px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background 0.2s;
+        }
+
+        .btn-secondary:hover { background: #e2e8f0; }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .search-bar input {
+            padding: 9px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 9px;
+            font-size: 0.88rem;
+            font-family: inherit;
+            outline: none;
+            min-width: 200px;
+            transition: border-color 0.2s;
+        }
+
+        .search-bar input:focus { border-color: var(--accent); }
+
+        /* Card wrapper */
+        .card {
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        /* Table */
+        .table-wrapper { overflow-x: auto; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+
+        thead th {
+            background: #f8fafc;
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        tbody td {
+            padding: 13px 16px;
+            border-bottom: 1px solid #f1f5f9;
+            color: var(--text);
+            vertical-align: middle;
+        }
+
+        tbody tr:last-child td { border-bottom: none; }
+
+        tbody tr:hover { background: #f8fafc; }
+
+        .action-btns { display: flex; gap: 6px; }
+
+        .btn-edit, .btn-delete, .btn-view {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 7px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .btn-edit  { background: rgba(59,130,246,0.12); color: var(--accent2); }
+        .btn-edit:hover  { background: var(--accent2); color: #fff; }
+        .btn-delete { background: rgba(239,68,68,0.1); color: var(--danger); }
+        .btn-delete:hover { background: var(--danger); color: #fff; }
+        .btn-view  { background: rgba(0,201,167,0.1); color: #008f76; }
+        .btn-view:hover  { background: var(--accent); color: #1a2744; }
+
+        /* Badge / Pill */
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+
+        .badge-green  { background: rgba(0,201,167,0.12); color: #008f76; }
+        .badge-blue   { background: rgba(59,130,246,0.12); color: #1d60c6; }
+        .badge-amber  { background: rgba(245,158,11,0.12); color: #b45309; }
+        .badge-red    { background: rgba(239,68,68,0.1);  color: #b91c1c; }
+        .badge-gray   { background: #f1f5f9; color: var(--muted); }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--muted);
+        }
+
+        .empty-state i { font-size: 2.5rem; margin-bottom: 12px; opacity: 0.4; }
+        .empty-state p { font-size: 0.9rem; }
+
+        /* ══════════════════════════════
+           GRADE DISPLAY
+        ══════════════════════════════ */
+        .grade-A  { color: #008f76; font-weight: 700; }
+        .grade-B  { color: #1d60c6; font-weight: 700; }
+        .grade-C  { color: #b45309; font-weight: 700; }
+        .grade-D  { color: #b91c1c; font-weight: 700; }
+        .grade-F  { color: #7f1d1d; font-weight: 700; }
+
+        /* Progress bar */
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+            min-width: 80px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 3px;
+            background: var(--accent);
+            transition: width 0.6s ease;
+        }
+
+        /* ══════════════════════════════
+           MODAL
+        ══════════════════════════════ */
+        .modal-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.45);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-backdrop.open { display: flex; }
+
+        .modal {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: popIn 0.25s ease;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-header h3 { font-size: 1.05rem; font-weight: 700; }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--muted);
+            transition: color 0.2s;
+        }
+
+        .modal-close:hover { color: var(--danger); }
+
+        .modal-body { padding: 20px 24px; }
+
+        .form-group { margin-bottom: 16px; }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--muted);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 13px;
+            border: 1.5px solid var(--border);
+            border-radius: 9px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+            background: #f9fafb;
+            color: var(--text);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--accent);
+            background: #fff;
+        }
+
+        .form-group textarea { resize: vertical; min-height: 80px; }
+
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            padding: 16px 24px 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn-save {
+            padding: 10px 22px;
+            background: var(--accent);
+            color: #1a2744;
+            border: none;
+            border-radius: 9px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .btn-save:hover { background: #00b394; }
+
+        .btn-cancel-modal {
+            padding: 10px 18px;
+            background: #f1f5f9;
+            color: var(--text);
+            border: none;
+            border-radius: 9px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background 0.2s;
+        }
+
+        .btn-cancel-modal:hover { background: #e2e8f0; }
+
+        /* Toast */
+        #toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #1a2744;
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 0.88rem;
+            font-weight: 500;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            transform: translateY(80px);
+            opacity: 0;
+            transition: all 0.35s ease;
+            z-index: 9999;
+            max-width: 320px;
+        }
+
+        #toast.show { transform: translateY(0); opacity: 1; }
+        #toast.success { border-left: 4px solid var(--accent); }
+        #toast.error   { border-left: 4px solid var(--danger); }
+
+        /* ══════════════════════════════
+           SYLLABUS specific
+        ══════════════════════════════ */
+        .syllabus-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 18px;
+        }
+
+        .syllabus-card {
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            border-top: 4px solid var(--accent);
+            transition: transform 0.2s;
+        }
+
+        .syllabus-card:hover { transform: translateY(-4px); }
+
+        .syllabus-card h3 { font-size: 1rem; margin-bottom: 6px; }
+
+        .syllabus-card .meta {
+            font-size: 0.78rem;
+            color: var(--muted);
+            margin-bottom: 12px;
+        }
+
+        .syllabus-topics { list-style: none; }
+
+        .syllabus-topics li {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            padding: 5px 0;
+            font-size: 0.82rem;
+            color: #475569;
+            border-bottom: 1px dashed #f1f5f9;
+        }
+
+        .syllabus-topics li:last-child { border-bottom: none; }
+
+        .syllabus-topics li::before {
+            content: '▸';
+            color: var(--accent);
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .syllabus-card-actions {
+            margin-top: 14px;
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Attendance grid */
+        .attendance-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 14px;
+            margin-bottom: 22px;
+        }
+
+        .att-stat {
+            background: var(--card);
+            border-radius: var(--radius);
+            padding: 16px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .att-stat .val { font-size: 1.6rem; font-weight: 700; }
+        .att-stat .lbl { font-size: 0.78rem; color: var(--muted); margin-top: 3px; }
+
+        /* ══════════════════════════════
+           RESPONSIVE
+        ══════════════════════════════ */
+        @media (max-width: 768px) {
+            #sidebar {
+                transform: translateX(-100%);
+            }
+
+            #sidebar.open { transform: translateX(0); }
+
+            #main-area { margin-left: 0; }
+
+            #hamburger-btn { display: block; }
+
+            .page-content { padding: 20px 16px; }
+
+            .form-row { grid-template-columns: 1fr; }
+
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+
+            .topbar { padding: 0 16px; }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .module-header { flex-direction: column; align-items: flex-start; }
+        }
+
+        /* Overlay for mobile sidebar */
+        #sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 190;
+        }
+
+        #sidebar-overlay.show { display: block; }
+
+        @keyframes popIn {
+            from { opacity:0; transform:scale(0.93); }
+            to   { opacity:1; transform:scale(1); }
+        }
+
+        /* Hero banner in dashboard */
+        .hero-banner {
+            background: linear-gradient(135deg, #1a2744 0%, #243b6e 100%);
+            border-radius: var(--radius);
+            padding: 28px 30px;
+            color: #fff;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .hero-banner h2 { font-size: 1.4rem; margin-bottom: 6px; }
+        .hero-banner p  { font-size: 0.88rem; opacity: 0.75; }
+        .hero-banner .emoji { font-size: 3.5rem; }
+
+        /* Book cover colors */
+        .book-cover {
+            width: 40px;
+            height: 52px;
             border-radius: 4px;
-            background-color: #f9f9f9;
-            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
         }
 
-        .personal-info p {
-            margin: 5px 0;
-            color: #333;
-        }
+        /* Schedule table colors */
+        .sched-cell { font-size: 0.78rem; padding: 8px 10px; border-radius: 7px; text-align: center; }
+        .sched-math    { background: rgba(59,130,246,0.1);  color: #1d60c6; }
+        .sched-science { background: rgba(0,201,167,0.1);  color: #008f76; }
+        .sched-english { background: rgba(245,158,11,0.1); color: #b45309; }
+        .sched-nepali  { background: rgba(139,92,246,0.1); color: #6d28d9; }
+        .sched-cs      { background: rgba(239,68,68,0.1);  color: #b91c1c; }
+        .sched-free    { background: #f8fafc; color: var(--muted); }
     </style>
 </head>
 <body>
-    <div class="dashboard">
-        <div class="main-content">
-            <h1>Welcome to the Dashboard </h1>
-            <!-- Main dashboard content here -->
-        </div>
-        <div class="profile-section" id="profileSection">
-          <a href="test2.html" class="back-btn">Back</a> 
-            <div class="profile-header">
-                <h2 id="myprofile">My Profile</h2>
-                <button onclick="logout()">Logout</button>
-            </div>
-            <div class="profile-photo">
-                <div class="profile-photo-container">
-                    <img src="https://via.placeholder.com/120" alt="Profile Photo" id="profilePhoto">
-                    <label for="photoInput" class="upload-btn">Upload Profile Photo</label>
-                    <input type="file" id="photoInput" accept="image/*" onchange="updatePhoto()">
-                    <button class="save-btn" onclick="savePhoto()">Save Photo</button>
-                </div>
-                <div class="success-message" id="successMessage">
-                    <span>&#10004; Your photo is saved successfully</span>
-                </div>
-            </div>
-            <div class="personal-info">
-                <h3>Personal Information</h3>
-                <p><strong>Name:</strong> John Doe</p>
-                <p><strong>Email:</strong> john.doe@example.com</p>
-                <p><strong>Phone:</strong> +1234567890</p>
-            </div>
-            <div class="profile-info">
-                <h3>Attendance History</h3>
-                <button onclick="viewDetails('attendance')">View Attendance Reports</button>
 
-                <h3>Scores</h3>
-                <button onclick="viewDetails('testScores')">View Test Scores</button>
-                <button onclick="viewDetails('examScores')">View Exam Scores</button>
-                <button onclick="viewDetails('marksheet')">View Marksheet</button>
+<!-- ══════════════ SIDEBAR OVERLAY (mobile) ══════════════ -->
+<div id="sidebar-overlay" onclick="closeSidebar()"></div>
 
-                <h3>Additional Features</h3>
-                <button onclick="viewDetails('contactInfo')">View Contact Info</button>
-            </div>
-        </div>
+<!-- ══════════════ SIDEBAR ══════════════ -->
+<aside id="sidebar">
+    <div class="sidebar-logo">
+        <h1>SIS <span>·</span> NCIT</h1>
+        <p>Student Information System</p>
     </div>
 
-    <script>
-        function goToHomePage() {
-            window.location.href = 'home.html'; // Replace with the actual home page URL
-        }
+    <nav class="sidebar-nav">
+        <div class="nav-section-label">Overview</div>
+        <button class="nav-item active" data-page="dashboard" onclick="navigate(this)">
+            <i class="fa-solid fa-gauge-high"></i> Dashboard
+        </button>
 
-        function logout() {
-            alert('You have been logged out.');
-            window.location.href = 'login.html'; // Replace with the actual login page URL
-        }
+        <div class="nav-section-label">Academics</div>
+        <button class="nav-item" data-page="syllabus" onclick="navigate(this)">
+            <i class="fa-solid fa-book-open"></i> Syllabus
+        </button>
+        <button class="nav-item" data-page="grades" onclick="navigate(this)">
+            <i class="fa-solid fa-chart-bar"></i> Grades
+        </button>
+        <button class="nav-item" data-page="attendance" onclick="navigate(this)">
+            <i class="fa-solid fa-calendar-check"></i> Attendance
+        </button>
+        <button class="nav-item" data-page="schedule" onclick="navigate(this)">
+            <i class="fa-solid fa-clock"></i> Schedule
+        </button>
 
-        function updatePhoto() {
-            const photoInput = document.getElementById('photoInput');
-            const profilePhoto = document.getElementById('profilePhoto');
+        <div class="nav-section-label">Resources</div>
+        <button class="nav-item" data-page="books" onclick="navigate(this)">
+            <i class="fa-solid fa-book"></i> Books / Library
+        </button>
 
-            if (photoInput.files && photoInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    profilePhoto.src = e.target.result;
-                };
-                reader.readAsDataURL(photoInput.files[0]);
-            }
-        }
+        <div class="nav-section-label">Administration</div>
+        <button class="nav-item" data-page="students" onclick="navigate(this)">
+            <i class="fa-solid fa-users"></i> Students
+        </button>
+        <button class="nav-item" data-page="programs" onclick="navigate(this)">
+            <i class="fa-solid fa-graduation-cap"></i> Programs
+        </button>
+    </nav>
 
-        function savePhoto() {
-            const successMessage = document.getElementById('successMessage');
-            successMessage.style.display = 'block';
-        }
-
-        function viewDetails(section) {
-            switch (section) {
-                case 'attendance':
-                    alert('Attendance: 95%\nReports available for download.');
-                    break;
-                case 'testScores':
-                    alert('Test Scores: 80%, 85%, 90%');
-                    break;
-                case 'examScores':
-                    alert('Exam Scores: 88%, 92%');
-                    break;
-                case 'marksheet':
-                    alert('Marksheet: Click to view/download from the dashboard.');
-                    break;
-                case 'contactInfo':
-                    alert('Email: john.doe@example.com\nPhone: +1234567890');
-                    break;
-                default:
-                    alert('No details available for this section.');
-            }
-        }
-    </script>
-</body>
-</html>
-
-  </div>
-
-  <!-- Login Page (Centered Modal) -->
-  <div class="login-modal hidden" id="login-modal">
-    <div class="login-container">
-      <button class="close-btn" onclick="toggleLogin()">×</button>
-      <h2>Welcome Back</h2>
-      <p>Choose your role to continue:</p>
-      <div class="login-buttons">
-        <button class="btn" onclick="toggleForm('student')">Login as Student</button>
-        <button class="btn" onclick="toggleForm('teacher')">Login as Teacher</button>
-      </div>
+    <div class="sidebar-footer">
+        <button class="logout-nav-btn" onclick="logoutUser()">
+            <i class="fa-solid fa-right-from-bracket"></i> Logout
+        </button>
     </div>
-  </div>
+</aside>
 
-  <!-- Login Forms -->
-  <div class="form-modal hidden" id="student-form">
-    <form>
-      <h2>Student Login</h2>
-      <input type="text" placeholder="Username" required>
-      <input type="password" placeholder="Password" required>
-      <button class="btn">Login</button>
-      <button type="button" class="btn cancel-btn" onclick="toggleForm()">Cancel</button>
-    </form>
-  </div>
-  <div class="form-modal hidden" id="teacher-form">
-    <form>
-      <h2>Teacher Login</h2>
-      <input type="text" placeholder="Username" required>
-      <input type="password" placeholder="Password" required>
-      <button class="btn">Login</button>
-      <button type="button" class="btn cancel-btn" onclick="toggleForm()">Cancel</button>
-    </form>
-  </div>
+<!-- ══════════════ MAIN AREA ══════════════ -->
+<div id="main-area">
+    <!-- Topbar -->
+    <header class="topbar">
+        <div class="topbar-left">
+            <button id="hamburger-btn" onclick="toggleSidebar()">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <span class="page-title" id="page-title">Dashboard</span>
+        </div>
+        <div class="topbar-right">
+            <div class="topbar-user">
+                <div class="avatar">JD</div>
+                <span>John Doe</span>
+            </div>
+        </div>
+    </header>
 
-  <script src="scripts.js"></script>
+    <!-- ════════════ PAGE CONTENT ════════════ -->
+    <div class="page-content">
 
-  <style>/* General Styles */
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f6f9;
-      color: #333;
-      margin: 0;
-      padding: 0;
+        <!-- ─── DASHBOARD ─── -->
+        <section class="page-section active" id="page-dashboard">
+            <div class="hero-banner">
+                <div>
+                    <h2>Welcome back, John! 👋</h2>
+                    <p>Here's what's happening in your academic portal today.</p>
+                </div>
+                <div class="emoji">🎓</div>
+            </div>
+
+            <div class="stats-grid" id="dash-stats"></div>
+
+            <div class="recent-grid">
+                <div class="card">
+                    <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:0.9rem;">
+                        📋 Recent Grades
+                    </div>
+                    <div id="dash-recent-grades" style="padding:8px 0;"></div>
+                </div>
+                <div class="card">
+                    <div style="padding:16px 20px;border-bottom:1px solid var(--border);font-weight:700;font-size:0.9rem;">
+                        📚 Recently Added Books
+                    </div>
+                    <div id="dash-recent-books" style="padding:8px 0;"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ─── SYLLABUS ─── -->
+        <section class="page-section" id="page-syllabus">
+            <div class="module-header">
+                <div>
+                    <h2>📖 Syllabus Management</h2>
+                    <p style="color:var(--muted);font-size:0.85rem;margin-top:3px;">Manage course topics and curriculum</p>
+                </div>
+                <button class="btn-primary" onclick="openModal('syllabus')">
+                    <i class="fa-solid fa-plus"></i> Add Subject
+                </button>
+            </div>
+            <div class="syllabus-cards" id="syllabus-container"></div>
+        </section>
+
+        <!-- ─── GRADES ─── -->
+        <section class="page-section" id="page-grades">
+            <div class="module-header">
+                <div>
+                    <h2>📊 Grades Management</h2>
+                    <p style="color:var(--muted);font-size:0.85rem;margin-top:3px;">Track and manage student grades</p>
+                </div>
+                <div class="search-bar">
+                    <input type="text" id="grades-search" placeholder="🔍 Search student or subject…" oninput="renderGrades()">
+                    <button class="btn-primary" onclick="openModal('grade')">
+                        <i class="fa-solid fa-plus"></i> Add Grade
+                    </button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Student Name</th>
+                                <th>Subject</th>
+                                <th>Marks</th>
+                                <th>Total</th>
+                                <th>Grade</th>
+                                <th>Semester</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="grades-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ─── ATTENDANCE ─── -->
+        <section class="page-section" id="page-attendance">
+            <div class="module-header">
+                <div>
+                    <h2>✅ Attendance Management</h2>
+                    <p style="color:var(--muted);font-size:0.85rem;margin-top:3px;">Track student attendance records</p>
+                </div>
+                <div class="search-bar">
+                    <input type="text" id="att-search" placeholder="🔍 Search student…" oninput="renderAttendance()">
+                    <button class="btn-primary" onclick="openModal('attendance')">
+                        <i class="fa-solid fa-plus"></i> Add Record
+                    </button>
+                </div>
+            </div>
+            <div class="attendance-summary" id="att-summary"></div>
+            <div class="card">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Student</th>
+                                <th>Subject</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Semester</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="attendance-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ─── SCHEDULE ─── -->
+        <section class="page-section" id="page-schedule">
+            <div class="module-header">
+                <div>
+                    <h2>🕐 Class Schedule</h2>
+                    <p style="color:var(--muted);font-size:0.85rem;margin-top:3px;">Weekly timetable overview</p>
+                </div>
+                <button class="btn-primary" onclick="openModal('schedule')">
+                    <i class="fa-solid fa-plus"></i> Add Slot
+                </button>
+            </div>
+            <div class="card">
+                <div class="table-wrapper" id="schedule-table-wrap"></div>
+            </div>
+            <div style="margin-top:20px;">
+                <h3 style="font-size:0.95rem;margin-bottom:12px;color:var(--muted);">All Schedule Entries</h3>
+                <div class="card">
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr><th>#</th><th>Day</th><th>Time</th><th>Subject</th><th>Teacher</th><th>Room</th><th>Actions</th></tr>
+                            </thead>
+                            <tbody id="schedule-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ─── BOOKS ─── -->
+        <section class="page-section" id="page-books">
+            <div class="module-header">
+                <div>
+                    <h2>📚 Library / Books</h2>
+                    <p style="color:var(--muted);font-size:0.85rem;margin-top:3px;">Manage library catalog and availability</p>
+                </div>
+                <div class="search-bar">
+                    <input type="text" id="books-search" placeholder="🔍 Search title or author…" oninput="renderBooks()">
+                    <button class="btn-primary" onclick="openModal('book')">
+                        <i class="fa-solid fa-plus"></i> Add Book
+                    </button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Book</th>
+                                <th>Author</th>
+                                <th>ISBN</th>
+                                <th>Subject</th>
+                                <th>Copies</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="books-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ─── STUDENTS ─── -->
+        <section class="page-section" id="page-students">
+            <div class="module-header">
+                <div>
+                    <h2>👥 Student Records</h2>
+                    <p style="color:var(--muted);font-size:0.85rem;margin-top:3px;">Manage student enrollment and information</p>
+                </div>
+                <div class="search-bar">
+                    <input type="text" id="students-search" placeholder="🔍 Search name or ID…" oninput="renderStudents()">
+                    <button class="btn-primary" onclick="openModal('student')">
+                        <i class="fa-solid fa-plus"></i> Add Student
+                    </button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Student ID</th>
+                                <th>Full Name</th>
+                                <th>Program</th>
+                                <th>Semester</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="students-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ─── PROGRAMS ─── -->
+        <section class="page-section" id="page-programs">
+            <div class="module-header">
+                <div>
+                    <h2>🎓 Programs</h2>
+                    <p style="color:var(--muted);font-size:0.85rem;margin-top:3px;">Academic programs offered by NCIT</p>
+                </div>
+                <button class="btn-primary" onclick="openModal('program')">
+                    <i class="fa-solid fa-plus"></i> Add Program
+                </button>
+            </div>
+            <div class="card">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Program Name</th>
+                                <th>Code</th>
+                                <th>Duration</th>
+                                <th>Semesters</th>
+                                <th>Enrolled</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="programs-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </div><!-- /page-content -->
+</div><!-- /main-area -->
+
+<!-- ══════════════ MODAL ══════════════ -->
+<div class="modal-backdrop" id="modal-backdrop" onclick="onBackdropClick(event)">
+    <div class="modal" id="modal">
+        <div class="modal-header">
+            <h3 id="modal-title">Add Record</h3>
+            <button class="modal-close" onclick="closeModal()">✕</button>
+        </div>
+        <div class="modal-body" id="modal-body"></div>
+        <div class="modal-footer">
+            <button class="btn-cancel-modal" onclick="closeModal()">Cancel</button>
+            <button class="btn-save" id="modal-save-btn" onclick="saveRecord()">Save</button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- ══════════════════════════════
+     JAVASCRIPT
+══════════════════════════════ -->
+<script>
+// ─────────────────────────────────────────────────────────
+//  DATA STORE  (localStorage backed)
+// ─────────────────────────────────────────────────────────
+const KEYS = {
+    students:   'sis_students',
+    grades:     'sis_grades',
+    books:      'sis_books',
+    syllabus:   'sis_syllabus',
+    attendance: 'sis_attendance',
+    schedule:   'sis_schedule',
+    programs:   'sis_programs',
+};
+
+function load(key)       { try { return JSON.parse(localStorage.getItem(key)) || []; } catch { return []; } }
+function save(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
+function uid()           { return Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+
+// ─── Seed default data if empty ───
+function seedData() {
+    if (!load(KEYS.students).length) {
+        save(KEYS.students, [
+            { id: uid(), sid: 'NCIT-001', name: 'Aarav Sharma',   program: 'BIT',  semester: '5', email: 'aarav@ncit.edu.np',   phone: '9841000001', status: 'Active' },
+            { id: uid(), sid: 'NCIT-002', name: 'Priya Thapa',    program: 'BCA',  semester: '3', email: 'priya@ncit.edu.np',   phone: '9841000002', status: 'Active' },
+            { id: uid(), sid: 'NCIT-003', name: 'Rohit Adhikari', program: 'BIT',  semester: '7', email: 'rohit@ncit.edu.np',   phone: '9841000003', status: 'Active' },
+            { id: uid(), sid: 'NCIT-004', name: 'Sunita Karki',   program: 'BSCIT',semester: '2', email: 'sunita@ncit.edu.np',  phone: '9841000004', status: 'Inactive' },
+            { id: uid(), sid: 'NCIT-005', name: 'Bikash Rai',     program: 'BCA',  semester: '6', email: 'bikash@ncit.edu.np',  phone: '9841000005', status: 'Active' },
+        ]);
     }
-    
-    header {
-      position: fixed;
-      width: 100%;
-      top: 0;
-      left: 0;
-      background-color: #2c3e50;
-      color: white;
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 20px;
-      z-index: 1000;
+    if (!load(KEYS.grades).length) {
+        save(KEYS.grades, [
+            { id: uid(), student: 'Aarav Sharma',   subject: 'Data Structures',  marks: 78, total: 100, semester: '5' },
+            { id: uid(), student: 'Priya Thapa',    subject: 'DBMS',             marks: 85, total: 100, semester: '3' },
+            { id: uid(), student: 'Rohit Adhikari', subject: 'Operating Systems',marks: 62, total: 100, semester: '7' },
+            { id: uid(), student: 'Sunita Karki',   subject: 'C Programming',    marks: 90, total: 100, semester: '2' },
+            { id: uid(), student: 'Bikash Rai',     subject: 'Web Technology',   marks: 55, total: 100, semester: '6' },
+        ]);
     }
-    
-    .nav-links {
-      list-style: none;
-      display: flex;
-      gap: 15px;
-      margin: 0px 50px;
+    if (!load(KEYS.books).length) {
+        save(KEYS.books, [
+            { id: uid(), title: 'Introduction to Algorithms',  author: 'Cormen et al.',      isbn: '9780262046305', subject: 'CS',      copies: 5, available: 3 },
+            { id: uid(), title: 'Database System Concepts',    author: 'Silberschatz et al.',isbn: '9780078022159', subject: 'DBMS',    copies: 4, available: 4 },
+            { id: uid(), title: 'Operating System Concepts',   author: 'Silberschatz',       isbn: '9781118063330', subject: 'OS',      copies: 6, available: 2 },
+            { id: uid(), title: 'Computer Networks',           author: 'Tanenbaum',          isbn: '9780132126953', subject: 'Network', copies: 3, available: 1 },
+            { id: uid(), title: 'Clean Code',                  author: 'Robert C. Martin',   isbn: '9780132350884', subject: 'SWE',     copies: 2, available: 2 },
+        ]);
     }
-    
-    .nav-links a, .login-btn {
-      color: #ecf0f1;
-      text-decoration: none;
-      cursor: pointer;
+    if (!load(KEYS.syllabus).length) {
+        save(KEYS.syllabus, [
+            { id: uid(), subject: 'Data Structures & Algorithms', code: 'CS301', semester: '3', credits: 4,
+              topics: ['Arrays & Linked Lists', 'Stacks & Queues', 'Trees & Graphs', 'Sorting Algorithms', 'Dynamic Programming'] },
+            { id: uid(), subject: 'Database Management System',   code: 'CS302', semester: '3', credits: 4,
+              topics: ['ER Diagrams', 'Relational Model', 'SQL', 'Normalization', 'Transaction Management'] },
+            { id: uid(), subject: 'Operating Systems',            code: 'CS401', semester: '5', credits: 3,
+              topics: ['Process Management', 'Scheduling', 'Memory Management', 'File Systems', 'Deadlocks'] },
+            { id: uid(), subject: 'Web Technology',               code: 'CS501', semester: '5', credits: 3,
+              topics: ['HTML5 & CSS3', 'JavaScript', 'React.js', 'Node.js', 'REST APIs'] },
+        ]);
     }
-    div.logo{
-      margin-left: -150px;
+    if (!load(KEYS.attendance).length) {
+        const today = new Date().toISOString().split('T')[0];
+        save(KEYS.attendance, [
+            { id: uid(), student: 'Aarav Sharma',   subject: 'Data Structures',  date: today, status: 'Present', semester: '5' },
+            { id: uid(), student: 'Priya Thapa',    subject: 'DBMS',             date: today, status: 'Present', semester: '3' },
+            { id: uid(), student: 'Rohit Adhikari', subject: 'Operating Systems',date: today, status: 'Absent',  semester: '7' },
+            { id: uid(), student: 'Sunita Karki',   subject: 'C Programming',    date: today, status: 'Late',    semester: '2' },
+            { id: uid(), student: 'Bikash Rai',     subject: 'Web Technology',   date: today, status: 'Present', semester: '6' },
+        ]);
     }
-    
-    .profile-icon {
-      font-size: 1.5rem;
-      cursor: pointer;
+    if (!load(KEYS.schedule).length) {
+        save(KEYS.schedule, [
+            { id: uid(), day: 'Monday',    time: '8:00 - 9:00',   subject: 'Data Structures',   teacher: 'Dr. Koirala', room: 'Room 101' },
+            { id: uid(), day: 'Monday',    time: '9:00 - 10:00',  subject: 'DBMS',              teacher: 'Prof. Thapa', room: 'Room 102' },
+            { id: uid(), day: 'Tuesday',   time: '10:00 - 11:00', subject: 'Operating Systems', teacher: 'Dr. Sharma',  room: 'Lab 1' },
+            { id: uid(), day: 'Wednesday', time: '8:00 - 9:00',   subject: 'Web Technology',    teacher: 'Prof. Rana',  room: 'Lab 2' },
+            { id: uid(), day: 'Thursday',  time: '11:00 - 12:00', subject: 'Data Structures',   teacher: 'Dr. Koirala', room: 'Room 101' },
+            { id: uid(), day: 'Friday',    time: '9:00 - 10:00',  subject: 'DBMS',              teacher: 'Prof. Thapa', room: 'Room 102' },
+        ]);
     }
-    
-    /* Profile Dashboard */
-    .profile-dashboard {
-      position: fixed;
-      top: 0;
-      right: 0;
-      width: 300px;
-      height: 100%;
-      background: white;
-      box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
-      padding: 20px;
-      z-index: 2000;
+    if (!load(KEYS.programs).length) {
+        save(KEYS.programs, [
+            { id: uid(), name: 'Bachelor of Information Technology', code: 'BIT',   duration: '4 Years', semesters: 8, enrolled: 120, status: 'Active' },
+            { id: uid(), name: 'Bachelor of Computer Application',   code: 'BCA',   duration: '3 Years', semesters: 6, enrolled: 95,  status: 'Active' },
+            { id: uid(), name: 'B.Sc. Computer Science & IT',        code: 'BSCIT', duration: '4 Years', semesters: 8, enrolled: 60,  status: 'Active' },
+            { id: uid(), name: 'Master of Information Technology',   code: 'MIT',   duration: '2 Years', semesters: 4, enrolled: 30,  status: 'Active' },
+        ]);
     }
-    
-    .profile-dashboard.hidden {
-      transform: translateX(100%);
-      transition: transform 0.3s ease-in-out;
+}
+
+// ─────────────────────────────────────────────────────────
+//  NAVIGATION
+// ─────────────────────────────────────────────────────────
+const pageTitles = {
+    dashboard: 'Dashboard',
+    syllabus:  'Syllabus',
+    grades:    'Grades',
+    attendance:'Attendance',
+    schedule:  'Schedule',
+    books:     'Books / Library',
+    students:  'Students',
+    programs:  'Programs',
+};
+
+function navigate(btn) {
+    const page = btn.dataset.page;
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+    document.getElementById('page-' + page).classList.add('active');
+    document.getElementById('page-title').textContent = pageTitles[page] || page;
+    closeSidebar();
+    renderPage(page);
+}
+
+function renderPage(page) {
+    switch(page) {
+        case 'dashboard':  renderDashboard();  break;
+        case 'syllabus':   renderSyllabus();   break;
+        case 'grades':     renderGrades();     break;
+        case 'attendance': renderAttendance(); break;
+        case 'schedule':   renderSchedule();   break;
+        case 'books':      renderBooks();      break;
+        case 'students':   renderStudents();   break;
+        case 'programs':   renderPrograms();   break;
     }
-    
-    /* Login Modal */
-    .login-modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 3000;
+}
+
+// ─────────────────────────────────────────────────────────
+//  SIDEBAR (mobile)
+// ─────────────────────────────────────────────────────────
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('sidebar-overlay').classList.toggle('show');
+}
+function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebar-overlay').classList.remove('show');
+}
+
+// ─────────────────────────────────────────────────────────
+//  HELPERS
+// ─────────────────────────────────────────────────────────
+function getGrade(marks, total) {
+    const pct = (marks / total) * 100;
+    if (pct >= 90) return { letter: 'A+', cls: 'grade-A' };
+    if (pct >= 80) return { letter: 'A',  cls: 'grade-A' };
+    if (pct >= 70) return { letter: 'B+', cls: 'grade-B' };
+    if (pct >= 60) return { letter: 'B',  cls: 'grade-B' };
+    if (pct >= 50) return { letter: 'C',  cls: 'grade-C' };
+    if (pct >= 40) return { letter: 'D',  cls: 'grade-D' };
+    return { letter: 'F', cls: 'grade-F' };
+}
+
+function escHtml(str) {
+    return String(str)
+        .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+const bookEmojis = ['📗','📘','📙','📕','📓','📒','📔'];
+const bookColors = ['#e8f5e9','#e3f2fd','#fff3e0','#fce4ec','#f3e5f5','#e0f7fa','#fff8e1'];
+
+function toast(msg, type='success') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = `show ${type}`;
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => { t.className = ''; }, 3000);
+}
+
+function emptyState(icon, msg) {
+    return `<tr><td colspan="20">
+        <div class="empty-state">
+            <i class="fa-solid fa-${icon}" style="display:block;text-align:center;font-size:2rem;opacity:.3;margin-bottom:10px;"></i>
+            <p>${msg}</p>
+        </div>
+    </td></tr>`;
+}
+
+// ─────────────────────────────────────────────────────────
+//  DASHBOARD
+// ─────────────────────────────────────────────────────────
+function renderDashboard() {
+    const students   = load(KEYS.students);
+    const grades     = load(KEYS.grades);
+    const books      = load(KEYS.books);
+    const attendance = load(KEYS.attendance);
+
+    const totalBooks = books.reduce((a,b) => a + Number(b.copies), 0);
+    const present    = attendance.filter(a => a.status === 'Present').length;
+    const attPct     = attendance.length ? Math.round((present / attendance.length) * 100) : 0;
+
+    document.getElementById('dash-stats').innerHTML = `
+        <div class="stat-card">
+            <div class="stat-icon green"><i class="fa-solid fa-users"></i></div>
+            <div class="stat-info">
+                <div class="val">${students.length}</div>
+                <div class="lbl">Total Students</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon blue"><i class="fa-solid fa-chart-bar"></i></div>
+            <div class="stat-info">
+                <div class="val">${grades.length}</div>
+                <div class="lbl">Grade Records</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon amber"><i class="fa-solid fa-book"></i></div>
+            <div class="stat-info">
+                <div class="val">${totalBooks}</div>
+                <div class="lbl">Books in Library</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon red"><i class="fa-solid fa-calendar-check"></i></div>
+            <div class="stat-info">
+                <div class="val">${attPct}%</div>
+                <div class="lbl">Attendance Rate</div>
+            </div>
+        </div>
+    `;
+
+    // Recent grades
+    const recentGrades = [...grades].slice(-5).reverse();
+    document.getElementById('dash-recent-grades').innerHTML = recentGrades.length
+        ? recentGrades.map(g => {
+            const gr = getGrade(g.marks, g.total);
+            return `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 20px;border-bottom:1px solid #f1f5f9;">
+                <div>
+                    <div style="font-size:0.88rem;font-weight:600;">${escHtml(g.student)}</div>
+                    <div style="font-size:0.75rem;color:var(--muted);">${escHtml(g.subject)}</div>
+                </div>
+                <span class="${gr.cls}" style="font-size:1rem;">${gr.letter} (${g.marks}/${g.total})</span>
+            </div>`;
+          }).join('')
+        : '<div style="padding:20px;text-align:center;color:var(--muted);font-size:0.85rem;">No grades yet</div>';
+
+    // Recent books
+    const recentBooks = [...books].slice(-4).reverse();
+    document.getElementById('dash-recent-books').innerHTML = recentBooks.length
+        ? recentBooks.map((b,i) => `
+            <div style="display:flex;align-items:center;gap:12px;padding:10px 20px;border-bottom:1px solid #f1f5f9;">
+                <div class="book-cover" style="background:${bookColors[i%bookColors.length]}">${bookEmojis[i%bookEmojis.length]}</div>
+                <div style="flex:1;min-width:0;">
+                    <div style="font-size:0.85rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escHtml(b.title)}</div>
+                    <div style="font-size:0.75rem;color:var(--muted);">${escHtml(b.author)}</div>
+                </div>
+                <span class="badge ${b.available > 0 ? 'badge-green' : 'badge-red'}">${b.available > 0 ? 'Available' : 'Out'}</span>
+            </div>`).join('')
+        : '<div style="padding:20px;text-align:center;color:var(--muted);font-size:0.85rem;">No books yet</div>';
+}
+
+// ─────────────────────────────────────────────────────────
+//  SYLLABUS
+// ─────────────────────────────────────────────────────────
+function renderSyllabus() {
+    const data = load(KEYS.syllabus);
+    const container = document.getElementById('syllabus-container');
+    if (!data.length) {
+        container.innerHTML = `<div class="card" style="padding:50px;text-align:center;color:var(--muted);grid-column:1/-1;">
+            <i class="fa-solid fa-book-open" style="font-size:2rem;opacity:.3;margin-bottom:12px;display:block;"></i>
+            <p>No syllabus added yet. Click "Add Subject" to get started.</p></div>`;
+        return;
     }
-    
-    .login-modal.hidden {
-      display: none;
+    container.innerHTML = data.map((s, i) => `
+        <div class="syllabus-card" style="border-top-color:${['#00C9A7','#3b82f6','#f59e0b','#ef4444','#8b5cf6'][i%5]}">
+            <h3>${escHtml(s.subject)}</h3>
+            <div class="meta">
+                <span class="badge badge-gray">${escHtml(s.code)}</span>
+                <span class="badge badge-blue" style="margin-left:6px;">Sem ${escHtml(s.semester)}</span>
+                <span class="badge badge-green" style="margin-left:6px;">${s.credits} Credits</span>
+            </div>
+            <ul class="syllabus-topics">
+                ${(s.topics || []).map(t => `<li>${escHtml(t)}</li>`).join('')}
+            </ul>
+            <div class="syllabus-card-actions">
+                <button class="btn-edit" onclick="editRecord('syllabus','${s.id}')"><i class="fa-solid fa-pen"></i> Edit</button>
+                <button class="btn-delete" onclick="deleteRecord('syllabus','${s.id}')"><i class="fa-solid fa-trash"></i> Delete</button>
+            </div>
+        </div>`).join('');
+}
+
+// ─────────────────────────────────────────────────────────
+//  GRADES
+// ─────────────────────────────────────────────────────────
+function renderGrades() {
+    const q    = (document.getElementById('grades-search')?.value || '').toLowerCase();
+    const data = load(KEYS.grades).filter(g =>
+        g.student.toLowerCase().includes(q) || g.subject.toLowerCase().includes(q)
+    );
+    const tbody = document.getElementById('grades-body');
+    if (!data.length) { tbody.innerHTML = emptyState('chart-bar', 'No grade records found.'); return; }
+    tbody.innerHTML = data.map((g, i) => {
+        const pct = Math.round((g.marks / g.total) * 100);
+        const gr  = getGrade(g.marks, g.total);
+        return `<tr>
+            <td><span style="color:var(--muted);font-size:0.78rem;">${i+1}</span></td>
+            <td><strong>${escHtml(g.student)}</strong></td>
+            <td>${escHtml(g.subject)}</td>
+            <td>
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <span>${g.marks}</span>
+                    <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${pct>=60?'var(--accent)':'var(--danger)'}"></div></div>
+                </div>
+            </td>
+            <td>${g.total}</td>
+            <td><span class="${gr.cls}">${gr.letter}</span></td>
+            <td><span class="badge badge-gray">Sem ${escHtml(g.semester)}</span></td>
+            <td>
+                <div class="action-btns">
+                    <button class="btn-edit" onclick="editRecord('grade','${g.id}')"><i class="fa-solid fa-pen"></i></button>
+                    <button class="btn-delete" onclick="deleteRecord('grade','${g.id}')"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            </td>
+        </tr>`;
+    }).join('');
+}
+
+// ─────────────────────────────────────────────────────────
+//  ATTENDANCE
+// ─────────────────────────────────────────────────────────
+function renderAttendance() {
+    const q    = (document.getElementById('att-search')?.value || '').toLowerCase();
+    const data = load(KEYS.attendance);
+    const filtered = data.filter(a => a.student.toLowerCase().includes(q));
+
+    // Summary
+    const present  = data.filter(a => a.status === 'Present').length;
+    const absent   = data.filter(a => a.status === 'Absent').length;
+    const late     = data.filter(a => a.status === 'Late').length;
+    const pct      = data.length ? Math.round((present/data.length)*100) : 0;
+
+    document.getElementById('att-summary').innerHTML = `
+        <div class="att-stat"><div class="val" style="color:var(--accent)">${present}</div><div class="lbl">Present</div></div>
+        <div class="att-stat"><div class="val" style="color:var(--danger)">${absent}</div><div class="lbl">Absent</div></div>
+        <div class="att-stat"><div class="val" style="color:var(--warn)">${late}</div><div class="lbl">Late</div></div>
+        <div class="att-stat"><div class="val">${pct}%</div><div class="lbl">Attendance Rate</div></div>
+    `;
+
+    const statusBadge = s => ({
+        'Present': 'badge-green', 'Absent': 'badge-red', 'Late': 'badge-amber'
+    })[s] || 'badge-gray';
+
+    const tbody = document.getElementById('attendance-body');
+    if (!filtered.length) { tbody.innerHTML = emptyState('calendar-check', 'No attendance records found.'); return; }
+    tbody.innerHTML = filtered.map((a, i) => `<tr>
+        <td><span style="color:var(--muted);font-size:0.78rem;">${i+1}</span></td>
+        <td><strong>${escHtml(a.student)}</strong></td>
+        <td>${escHtml(a.subject)}</td>
+        <td>${escHtml(a.date)}</td>
+        <td><span class="badge ${statusBadge(a.status)}">${escHtml(a.status)}</span></td>
+        <td><span class="badge badge-gray">Sem ${escHtml(a.semester)}</span></td>
+        <td>
+            <div class="action-btns">
+                <button class="btn-edit" onclick="editRecord('attendance','${a.id}')"><i class="fa-solid fa-pen"></i></button>
+                <button class="btn-delete" onclick="deleteRecord('attendance','${a.id}')"><i class="fa-solid fa-trash"></i></button>
+            </div>
+        </td>
+    </tr>`).join('');
+}
+
+// ─────────────────────────────────────────────────────────
+//  SCHEDULE
+// ─────────────────────────────────────────────────────────
+const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
+const SCHED_COLORS = {
+    'Data Structures':   'sched-cs',
+    'DBMS':              'sched-math',
+    'Operating Systems': 'sched-science',
+    'Web Technology':    'sched-english',
+    'C Programming':     'sched-nepali',
+};
+
+function renderSchedule() {
+    const data = load(KEYS.schedule);
+
+    // Timetable grid
+    const times = [...new Set(data.map(s => s.time))].sort();
+    let grid = `<table><thead><tr><th>Time</th>${DAYS.map(d=>`<th>${d}</th>`).join('')}</tr></thead><tbody>`;
+    times.forEach(t => {
+        grid += `<tr><td style="font-weight:600;font-size:0.8rem;white-space:nowrap;color:var(--muted);">${escHtml(t)}</td>`;
+        DAYS.forEach(d => {
+            const slot = data.find(s => s.time === t && s.day === d);
+            if (slot) {
+                const cls = SCHED_COLORS[slot.subject] || 'sched-math';
+                grid += `<td><div class="sched-cell ${cls}">${escHtml(slot.subject)}<br><small>${escHtml(slot.room)}</small></div></td>`;
+            } else {
+                grid += `<td><div class="sched-cell sched-free">—</div></td>`;
+            }
+        });
+        grid += '</tr>';
+    });
+    grid += '</tbody></table>';
+    document.getElementById('schedule-table-wrap').innerHTML = grid;
+
+    // List
+    const tbody = document.getElementById('schedule-body');
+    if (!data.length) { tbody.innerHTML = emptyState('clock', 'No schedule entries yet.'); return; }
+    tbody.innerHTML = data.map((s, i) => `<tr>
+        <td><span style="color:var(--muted);font-size:0.78rem;">${i+1}</span></td>
+        <td><span class="badge badge-blue">${escHtml(s.day)}</span></td>
+        <td style="font-weight:600;font-size:0.82rem;">${escHtml(s.time)}</td>
+        <td>${escHtml(s.subject)}</td>
+        <td>${escHtml(s.teacher)}</td>
+        <td>${escHtml(s.room)}</td>
+        <td>
+            <div class="action-btns">
+                <button class="btn-edit" onclick="editRecord('schedule','${s.id}')"><i class="fa-solid fa-pen"></i></button>
+                <button class="btn-delete" onclick="deleteRecord('schedule','${s.id}')"><i class="fa-solid fa-trash"></i></button>
+            </div>
+        </td>
+    </tr>`).join('');
+}
+
+// ─────────────────────────────────────────────────────────
+//  BOOKS
+// ─────────────────────────────────────────────────────────
+function renderBooks() {
+    const q    = (document.getElementById('books-search')?.value || '').toLowerCase();
+    const data = load(KEYS.books).filter(b =>
+        b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q)
+    );
+    const tbody = document.getElementById('books-body');
+    if (!data.length) { tbody.innerHTML = emptyState('book', 'No books found. Add some to the library.'); return; }
+    tbody.innerHTML = data.map((b, i) => {
+        const avail = Number(b.available);
+        const copies = Number(b.copies);
+        const avBadge = avail === 0 ? 'badge-red' : avail <= 2 ? 'badge-amber' : 'badge-green';
+        const avText  = avail === 0 ? 'Out of Stock' : avail <= 2 ? `${avail} Left` : 'Available';
+        return `<tr>
+            <td><span style="color:var(--muted);font-size:0.78rem;">${i+1}</span></td>
+            <td>
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <div class="book-cover" style="background:${bookColors[i%bookColors.length]}">${bookEmojis[i%bookEmojis.length]}</div>
+                    <div>
+                        <div style="font-weight:600;font-size:0.88rem;">${escHtml(b.title)}</div>
+                        <div style="font-size:0.75rem;color:var(--muted);">${escHtml(b.subject)}</div>
+                    </div>
+                </div>
+            </td>
+            <td>${escHtml(b.author)}</td>
+            <td style="font-size:0.78rem;color:var(--muted);">${escHtml(b.isbn)}</td>
+            <td>${escHtml(b.subject)}</td>
+            <td>${copies}</td>
+            <td><span class="badge ${avBadge}">${avText}</span></td>
+            <td>
+                <div class="action-btns">
+                    <button class="btn-edit" onclick="editRecord('book','${b.id}')"><i class="fa-solid fa-pen"></i></button>
+                    <button class="btn-delete" onclick="deleteRecord('book','${b.id}')"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            </td>
+        </tr>`;
+    }).join('');
+}
+
+// ─────────────────────────────────────────────────────────
+//  STUDENTS
+// ─────────────────────────────────────────────────────────
+function renderStudents() {
+    const q    = (document.getElementById('students-search')?.value || '').toLowerCase();
+    const data = load(KEYS.students).filter(s =>
+        s.name.toLowerCase().includes(q) || s.sid.toLowerCase().includes(q)
+    );
+    const tbody = document.getElementById('students-body');
+    if (!data.length) { tbody.innerHTML = emptyState('users', 'No students found.'); return; }
+    tbody.innerHTML = data.map((s, i) => `<tr>
+        <td><span style="color:var(--muted);font-size:0.78rem;">${i+1}</span></td>
+        <td><span class="badge badge-gray">${escHtml(s.sid)}</span></td>
+        <td><strong>${escHtml(s.name)}</strong></td>
+        <td>${escHtml(s.program)}</td>
+        <td><span class="badge badge-blue">Sem ${escHtml(s.semester)}</span></td>
+        <td style="font-size:0.82rem;">${escHtml(s.email)}</td>
+        <td style="font-size:0.82rem;">${escHtml(s.phone)}</td>
+        <td><span class="badge ${s.status==='Active'?'badge-green':'badge-red'}">${escHtml(s.status)}</span></td>
+        <td>
+            <div class="action-btns">
+                <button class="btn-edit" onclick="editRecord('student','${s.id}')"><i class="fa-solid fa-pen"></i></button>
+                <button class="btn-delete" onclick="deleteRecord('student','${s.id}')"><i class="fa-solid fa-trash"></i></button>
+            </div>
+        </td>
+    </tr>`).join('');
+}
+
+// ─────────────────────────────────────────────────────────
+//  PROGRAMS
+// ─────────────────────────────────────────────────────────
+function renderPrograms() {
+    const data = load(KEYS.programs);
+    const tbody = document.getElementById('programs-body');
+    if (!data.length) { tbody.innerHTML = emptyState('graduation-cap', 'No programs added yet.'); return; }
+    tbody.innerHTML = data.map((p, i) => `<tr>
+        <td><span style="color:var(--muted);font-size:0.78rem;">${i+1}</span></td>
+        <td><strong>${escHtml(p.name)}</strong></td>
+        <td><span class="badge badge-blue">${escHtml(p.code)}</span></td>
+        <td>${escHtml(p.duration)}</td>
+        <td>${p.semesters}</td>
+        <td>${p.enrolled}</td>
+        <td><span class="badge ${p.status==='Active'?'badge-green':'badge-red'}">${escHtml(p.status)}</span></td>
+        <td>
+            <div class="action-btns">
+                <button class="btn-edit" onclick="editRecord('program','${p.id}')"><i class="fa-solid fa-pen"></i></button>
+                <button class="btn-delete" onclick="deleteRecord('program','${p.id}')"><i class="fa-solid fa-trash"></i></button>
+            </div>
+        </td>
+    </tr>`).join('');
+}
+
+// ─────────────────────────────────────────────────────────
+//  MODAL SYSTEM
+// ─────────────────────────────────────────────────────────
+let _currentModal = null;  // { type, id }
+
+const MODAL_CONFIGS = {
+    student: {
+        title: (id) => id ? 'Edit Student' : 'Add Student',
+        fields: (rec) => `
+            <div class="form-row">
+                <div class="form-group"><label>Student ID</label>
+                    <input id="f-sid" value="${escHtml(rec.sid||'')}" placeholder="e.g. NCIT-006" required></div>
+                <div class="form-group"><label>Full Name</label>
+                    <input id="f-name" value="${escHtml(rec.name||'')}" placeholder="Full name" required></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Program</label>
+                    <select id="f-program">
+                        ${['BIT','BCA','BSCIT','MIT'].map(p=>`<option ${rec.program===p?'selected':''}>${p}</option>`).join('')}
+                    </select></div>
+                <div class="form-group"><label>Semester</label>
+                    <select id="f-semester">
+                        ${[1,2,3,4,5,6,7,8].map(s=>`<option ${rec.semester==s?'selected':''}>${s}</option>`).join('')}
+                    </select></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Email</label>
+                    <input id="f-email" type="email" value="${escHtml(rec.email||'')}" placeholder="email@ncit.edu.np"></div>
+                <div class="form-group"><label>Phone</label>
+                    <input id="f-phone" value="${escHtml(rec.phone||'')}" placeholder="+977 9800000000"></div>
+            </div>
+            <div class="form-group"><label>Status</label>
+                <select id="f-status">
+                    <option ${rec.status==='Active'?'selected':''}>Active</option>
+                    <option ${rec.status==='Inactive'?'selected':''}>Inactive</option>
+                </select></div>
+        `,
+        collect: () => ({
+            sid: document.getElementById('f-sid').value.trim(),
+            name: document.getElementById('f-name').value.trim(),
+            program: document.getElementById('f-program').value,
+            semester: document.getElementById('f-semester').value,
+            email: document.getElementById('f-email').value.trim(),
+            phone: document.getElementById('f-phone').value.trim(),
+            status: document.getElementById('f-status').value,
+        }),
+        validate: (d) => d.sid && d.name,
+        key: KEYS.students,
+    },
+
+    grade: {
+        title: (id) => id ? 'Edit Grade' : 'Add Grade',
+        fields: (rec) => `
+            <div class="form-group"><label>Student Name</label>
+                <input id="f-student" value="${escHtml(rec.student||'')}" placeholder="Student full name" required></div>
+            <div class="form-group"><label>Subject</label>
+                <input id="f-subject" value="${escHtml(rec.subject||'')}" placeholder="e.g. Data Structures" required></div>
+            <div class="form-row">
+                <div class="form-group"><label>Marks Obtained</label>
+                    <input id="f-marks" type="number" min="0" value="${rec.marks||''}" placeholder="e.g. 78" required></div>
+                <div class="form-group"><label>Total Marks</label>
+                    <input id="f-total" type="number" min="1" value="${rec.total||100}" placeholder="e.g. 100" required></div>
+            </div>
+            <div class="form-group"><label>Semester</label>
+                <select id="f-semester">
+                    ${[1,2,3,4,5,6,7,8].map(s=>`<option ${rec.semester==s?'selected':''}>${s}</option>`).join('')}
+                </select></div>
+        `,
+        collect: () => ({
+            student:  document.getElementById('f-student').value.trim(),
+            subject:  document.getElementById('f-subject').value.trim(),
+            marks:    Number(document.getElementById('f-marks').value),
+            total:    Number(document.getElementById('f-total').value),
+            semester: document.getElementById('f-semester').value,
+        }),
+        validate: (d) => d.student && d.subject && d.marks >= 0 && d.total > 0,
+        key: KEYS.grades,
+    },
+
+    book: {
+        title: (id) => id ? 'Edit Book' : 'Add Book',
+        fields: (rec) => `
+            <div class="form-group"><label>Book Title</label>
+                <input id="f-title" value="${escHtml(rec.title||'')}" placeholder="Book title" required></div>
+            <div class="form-group"><label>Author(s)</label>
+                <input id="f-author" value="${escHtml(rec.author||'')}" placeholder="Author name(s)" required></div>
+            <div class="form-row">
+                <div class="form-group"><label>ISBN</label>
+                    <input id="f-isbn" value="${escHtml(rec.isbn||'')}" placeholder="ISBN number"></div>
+                <div class="form-group"><label>Subject / Category</label>
+                    <input id="f-subject" value="${escHtml(rec.subject||'')}" placeholder="e.g. CS, DBMS"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Total Copies</label>
+                    <input id="f-copies" type="number" min="1" value="${rec.copies||1}" required></div>
+                <div class="form-group"><label>Available Copies</label>
+                    <input id="f-available" type="number" min="0" value="${rec.available||1}" required></div>
+            </div>
+        `,
+        collect: () => ({
+            title:     document.getElementById('f-title').value.trim(),
+            author:    document.getElementById('f-author').value.trim(),
+            isbn:      document.getElementById('f-isbn').value.trim(),
+            subject:   document.getElementById('f-subject').value.trim(),
+            copies:    Number(document.getElementById('f-copies').value),
+            available: Number(document.getElementById('f-available').value),
+        }),
+        validate: (d) => d.title && d.author,
+        key: KEYS.books,
+    },
+
+    syllabus: {
+        title: (id) => id ? 'Edit Subject' : 'Add Subject',
+        fields: (rec) => `
+            <div class="form-group"><label>Subject Name</label>
+                <input id="f-subject" value="${escHtml(rec.subject||'')}" placeholder="e.g. Data Structures & Algorithms" required></div>
+            <div class="form-row">
+                <div class="form-group"><label>Subject Code</label>
+                    <input id="f-code" value="${escHtml(rec.code||'')}" placeholder="e.g. CS301" required></div>
+                <div class="form-group"><label>Semester</label>
+                    <select id="f-semester">
+                        ${[1,2,3,4,5,6,7,8].map(s=>`<option ${rec.semester==s?'selected':''}>${s}</option>`).join('')}
+                    </select></div>
+            </div>
+            <div class="form-group"><label>Credits</label>
+                <input id="f-credits" type="number" min="1" max="6" value="${rec.credits||3}" required></div>
+            <div class="form-group"><label>Topics (one per line)</label>
+                <textarea id="f-topics" rows="5" placeholder="Arrays & Linked Lists&#10;Stacks & Queues&#10;Trees & Graphs">${(rec.topics||[]).join('\n')}</textarea></div>
+        `,
+        collect: () => ({
+            subject:  document.getElementById('f-subject').value.trim(),
+            code:     document.getElementById('f-code').value.trim(),
+            semester: document.getElementById('f-semester').value,
+            credits:  Number(document.getElementById('f-credits').value),
+            topics:   document.getElementById('f-topics').value.split('\n').map(t=>t.trim()).filter(Boolean),
+        }),
+        validate: (d) => d.subject && d.code,
+        key: KEYS.syllabus,
+    },
+
+    attendance: {
+        title: (id) => id ? 'Edit Attendance' : 'Add Attendance Record',
+        fields: (rec) => `
+            <div class="form-group"><label>Student Name</label>
+                <input id="f-student" value="${escHtml(rec.student||'')}" placeholder="Student full name" required></div>
+            <div class="form-group"><label>Subject</label>
+                <input id="f-subject" value="${escHtml(rec.subject||'')}" placeholder="e.g. DBMS" required></div>
+            <div class="form-row">
+                <div class="form-group"><label>Date</label>
+                    <input id="f-date" type="date" value="${rec.date||new Date().toISOString().split('T')[0]}" required></div>
+                <div class="form-group"><label>Semester</label>
+                    <select id="f-semester">
+                        ${[1,2,3,4,5,6,7,8].map(s=>`<option ${rec.semester==s?'selected':''}>${s}</option>`).join('')}
+                    </select></div>
+            </div>
+            <div class="form-group"><label>Status</label>
+                <select id="f-status">
+                    <option ${rec.status==='Present'?'selected':''}>Present</option>
+                    <option ${rec.status==='Absent'?'selected':''}>Absent</option>
+                    <option ${rec.status==='Late'?'selected':''}>Late</option>
+                </select></div>
+        `,
+        collect: () => ({
+            student:  document.getElementById('f-student').value.trim(),
+            subject:  document.getElementById('f-subject').value.trim(),
+            date:     document.getElementById('f-date').value,
+            semester: document.getElementById('f-semester').value,
+            status:   document.getElementById('f-status').value,
+        }),
+        validate: (d) => d.student && d.subject && d.date,
+        key: KEYS.attendance,
+    },
+
+    schedule: {
+        title: (id) => id ? 'Edit Schedule Slot' : 'Add Schedule Slot',
+        fields: (rec) => `
+            <div class="form-row">
+                <div class="form-group"><label>Day</label>
+                    <select id="f-day">
+                        ${DAYS.map(d=>`<option ${rec.day===d?'selected':''}>${d}</option>`).join('')}
+                    </select></div>
+                <div class="form-group"><label>Time Slot</label>
+                    <input id="f-time" value="${escHtml(rec.time||'')}" placeholder="e.g. 8:00 - 9:00" required></div>
+            </div>
+            <div class="form-group"><label>Subject</label>
+                <input id="f-subject" value="${escHtml(rec.subject||'')}" placeholder="Subject name" required></div>
+            <div class="form-row">
+                <div class="form-group"><label>Teacher</label>
+                    <input id="f-teacher" value="${escHtml(rec.teacher||'')}" placeholder="Teacher name"></div>
+                <div class="form-group"><label>Room / Lab</label>
+                    <input id="f-room" value="${escHtml(rec.room||'')}" placeholder="e.g. Room 101"></div>
+            </div>
+        `,
+        collect: () => ({
+            day:     document.getElementById('f-day').value,
+            time:    document.getElementById('f-time').value.trim(),
+            subject: document.getElementById('f-subject').value.trim(),
+            teacher: document.getElementById('f-teacher').value.trim(),
+            room:    document.getElementById('f-room').value.trim(),
+        }),
+        validate: (d) => d.day && d.time && d.subject,
+        key: KEYS.schedule,
+    },
+
+    program: {
+        title: (id) => id ? 'Edit Program' : 'Add Program',
+        fields: (rec) => `
+            <div class="form-group"><label>Program Name</label>
+                <input id="f-name" value="${escHtml(rec.name||'')}" placeholder="e.g. Bachelor of Information Technology" required></div>
+            <div class="form-row">
+                <div class="form-group"><label>Code</label>
+                    <input id="f-code" value="${escHtml(rec.code||'')}" placeholder="e.g. BIT" required></div>
+                <div class="form-group"><label>Duration</label>
+                    <input id="f-duration" value="${escHtml(rec.duration||'4 Years')}" placeholder="e.g. 4 Years"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>Semesters</label>
+                    <input id="f-semesters" type="number" min="1" value="${rec.semesters||8}"></div>
+                <div class="form-group"><label>Enrolled Students</label>
+                    <input id="f-enrolled" type="number" min="0" value="${rec.enrolled||0}"></div>
+            </div>
+            <div class="form-group"><label>Status</label>
+                <select id="f-status">
+                    <option ${rec.status==='Active'?'selected':''}>Active</option>
+                    <option ${rec.status==='Inactive'?'selected':''}>Inactive</option>
+                </select></div>
+        `,
+        collect: () => ({
+            name:      document.getElementById('f-name').value.trim(),
+            code:      document.getElementById('f-code').value.trim(),
+            duration:  document.getElementById('f-duration').value.trim(),
+            semesters: Number(document.getElementById('f-semesters').value),
+            enrolled:  Number(document.getElementById('f-enrolled').value),
+            status:    document.getElementById('f-status').value,
+        }),
+        validate: (d) => d.name && d.code,
+        key: KEYS.programs,
+    },
+};
+
+function openModal(type, id = null) {
+    const cfg = MODAL_CONFIGS[type];
+    if (!cfg) return;
+    let rec = {};
+    if (id) {
+        const data = load(cfg.key);
+        rec = data.find(r => r.id === id) || {};
     }
-    
-    .login-container {
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      width: 350px;
-      text-align: center;
+    _currentModal = { type, id };
+    document.getElementById('modal-title').textContent = cfg.title(id);
+    document.getElementById('modal-body').innerHTML = cfg.fields(rec);
+    document.getElementById('modal-backdrop').classList.add('open');
+}
+
+function closeModal() {
+    document.getElementById('modal-backdrop').classList.remove('open');
+    _currentModal = null;
+}
+
+function onBackdropClick(e) {
+    if (e.target === document.getElementById('modal-backdrop')) closeModal();
+}
+
+function saveRecord() {
+    if (!_currentModal) return;
+    const { type, id } = _currentModal;
+    const cfg = MODAL_CONFIGS[type];
+    const data_collected = cfg.collect();
+
+    if (!cfg.validate(data_collected)) {
+        toast('Please fill in all required fields.', 'error');
+        return;
     }
-    
-    .login-buttons .btn {
-      margin: 10px;
+
+    let data = load(cfg.key);
+    if (id) {
+        const idx = data.findIndex(r => r.id === id);
+        if (idx !== -1) data[idx] = { ...data[idx], ...data_collected };
+        toast(`✅ ${type.charAt(0).toUpperCase()+type.slice(1)} updated successfully!`);
+    } else {
+        data.push({ id: uid(), ...data_collected });
+        toast(`✅ ${type.charAt(0).toUpperCase()+type.slice(1)} added successfully!`);
     }
-    
-    /* Buttons */
-    .btn {
-      background-color: #3498db;
-      color: white;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin: 5px;
+    save(cfg.key, data);
+    closeModal();
+    renderPage(getCurrentPage());
+    if (getCurrentPage() !== 'dashboard') renderDashboard();
+}
+
+// ─────────────────────────────────────────────────────────
+//  CRUD helpers
+// ─────────────────────────────────────────────────────────
+function editRecord(type, id) {
+    openModal(type, id);
+}
+
+function deleteRecord(type, id) {
+    const cfg = MODAL_CONFIGS[type];
+    if (!cfg) return;
+    if (!confirm('Are you sure you want to delete this record?')) return;
+    let data = load(cfg.key).filter(r => r.id !== id);
+    save(cfg.key, data);
+    toast(`🗑️ Record deleted.`);
+    renderPage(getCurrentPage());
+}
+
+function getCurrentPage() {
+    const active = document.querySelector('.page-section.active');
+    return active ? active.id.replace('page-', '') : 'dashboard';
+}
+
+// ─────────────────────────────────────────────────────────
+//  LOGOUT
+// ─────────────────────────────────────────────────────────
+function logoutUser() {
+    if (confirm('Are you sure you want to logout?')) {
+        window.location.href = 'index.html';
     }
-    .close-btn{
-        margin-left: -200px;
-        margin-top: 40px;
-        background-color: red;
-        display:hidden;
-    }
-    </style>
-    <script>function toggleProfile() {
-        const profile = document.getElementById('profile-dashboard');
-        profile.classList.toggle('hidden');
-      }
-      
-      function toggleLogin() {
-        const loginModal = document.getElementById('login-modal');
-        loginModal.classList.toggle('hidden');
-      }
-      
-      function toggleForm(formType = null) {
-        const studentForm = document.getElementById('student-form');
-        const teacherForm = document.getElementById('teacher-form');
-        studentForm.classList.add('hidden');
-        teacherForm.classList.add('hidden');
-      
-        if (formType === 'student') {
-          studentForm.classList.remove('hidden');
-        } else if (formType === 'teacher') {
-          teacherForm.classList.remove('hidden');
-        }
-      }
-      </script>
+}
+
+// ─────────────────────────────────────────────────────────
+//  INIT
+// ─────────────────────────────────────────────────────────
+seedData();
+renderDashboard();
+</script>
 </body>
 </html>
